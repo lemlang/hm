@@ -5,6 +5,7 @@
 #include <new>
 #include <cstdlib> // for malloc() and free()
 #include <iostream>
+#include <typeinfo>
 
 #include "hm.h"
 
@@ -25,4 +26,21 @@ hms* hms::instance() {
 memblock* hms::allocate() {
 
     return (memblock*) &M[++next];
+}
+
+
+void * operator new(std::size_t n) throw(std::bad_alloc)
+{
+    std::cout << "new " << n << std::endl;
+    return malloc(n+sizeof(hmp<hms>));
+}
+void operator delete(void * p, std::size_t sz ) throw()
+{
+    std::cout << "delete " << sz << " " << typeid(p).name() << " " << p << std::endl;
+    free(p);
+}
+void operator delete(void * p) throw()
+{
+    std::cout << "delete " << typeid(p).name() << " " << p << std::endl;
+    free(p);
 }

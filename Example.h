@@ -12,7 +12,7 @@ class Example {
     int width, height;
 public:
     int wtf = 11;
-    Example* set_values (int,int);
+    void* set_values (int,int);
     int area ();
 };
 

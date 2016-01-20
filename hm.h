@@ -5,9 +5,9 @@
 #ifndef CPP_HM_HM_H
 #define CPP_HM_HM_H
 
-#include <execinfo.h>
 
 #define MAXMEMSIZE 0x400000L
+
 
 typedef struct {
     void* pointer;
@@ -28,7 +28,7 @@ public:
 
 template < typename T > class hmp {
 private:
-    memblock* intermediate = NULL;
+    memblock* intermediate;
     int generation;
 
 public:
@@ -45,13 +45,7 @@ public:
         std::cout << "copy constructor"<< std::endl;
     }
     ~hmp() {
-        if( this->intermediate->pointer != NULL && this->intermediate->generation == this->generation) {
-            std::cout << "destructor: kill!" << std::endl;
-            delete ((T*)(this->intermediate->pointer));
-            this->intermediate->generation++;
-        } else {
-            std::cout << "destructor: already dead!" << std::endl;
-        }
+        std::cout << "destructor called on smart pointer"<< std::endl;
     }
     T&  operator*() {
         std::cout << "memebr override *"<< std::endl;
@@ -62,11 +56,11 @@ public:
         }
     }
     T* operator->()  {
-        std::cout << "memeber override -> "<< (long)this->intermediate->pointer<< std::endl;
         if( this->intermediate->pointer != NULL && this->intermediate->generation == this->generation) {
+        std::cout << "memeber override -> "<< this->intermediate->pointer<< std::endl;
             return (T*) (this->intermediate->pointer);
         } else {
-            throw std::invalid_argument("target pointer inaccesible");
+            throw std::bad_alloc();
         }
     }
     hmp<T>& operator = (const hmp<T>& p) {
@@ -85,7 +79,22 @@ public:
         std::cout << "function operator override " << std::endl;
         return (T&)this;
     }
+
+    friend void kill(hmp<T> anypointer){
+       if( anypointer.intermediate->pointer != NULL && anypointer.intermediate->generation == anypointer.generation) {
+            std::cout << "killem! "<< anypointer.intermediate->pointer << std::endl;
+            anypointer.intermediate->generation++;
+           ((T*)(anypointer.intermediate->pointer))->~T();
+           free(anypointer.intermediate->pointer);
+            //delete ((T*)(anypointer.intermediate->pointer));
+        } else {
+            std::cout << "cannot kill: already dead!" << std::endl;
+        }
+    }
 };
+
+
+
 
 
 #endif //CPP_HM_HM_H

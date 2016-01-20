@@ -6,7 +6,7 @@
 
 
 
-Example* Example::set_values(int i, int i1) {
+void* Example::set_values(int i, int i1) {
     this->height = i;
     this->width = i1;
     return this;

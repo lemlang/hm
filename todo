@@ -1,0 +1,15 @@
+zaimplementować operator dereferencji *()
+
+return do obiektu zabitego.....
+wołamy metodę obiektu i przekazujemy .....
+
+
+
+jak przekazać wskaźnik do nowego obiektu z naszego obiektu....
+
+
+ciąg operacji arytmetycznych ....
+czy c++ wykonuje delete na zmiennych tymczasowych?
+x := z1.add(z2.add(z3));
+
+
