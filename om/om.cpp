@@ -7,23 +7,23 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "hm.h"
+#include "om.h"
 
-hms*  hms::hms_instance = NULL;
-hms::hms() {
+ObjectManagement *ObjectManagement::system_instance = NULL;
+ObjectManagement::ObjectManagement() {
     M = (int*)calloc (MAXMEMSIZE + 1, sizeof(memblock)); /* allocate main memory array */
     std::cout << "M calloc"<< std::endl;
 }
 
 
-hms* hms::instance() {
-    if(!hms::hms_instance) {
-        hms::hms_instance = new hms;
+ObjectManagement *ObjectManagement::instance() {
+    if(!ObjectManagement::system_instance) {
+        ObjectManagement::system_instance = new ObjectManagement;
     }
-    return hms::hms_instance;
+    return ObjectManagement::system_instance;
 }
 
-memblock* hms::allocate() {
+memblock*ObjectManagement::allocate() {
 
     return (memblock*) &M[++next];
 }
@@ -32,7 +32,7 @@ memblock* hms::allocate() {
 void * operator new(std::size_t n) throw(std::bad_alloc)
 {
     std::cout << "new " << n << std::endl;
-    return malloc(n+sizeof(hmp<hms>));
+    return malloc(n+sizeof(ObjectPtr<ObjectManagement>));
 }
 void operator delete(void * p, std::size_t sz ) throw()
 {

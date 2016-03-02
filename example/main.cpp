@@ -3,7 +3,7 @@
 
 #include "Example.h"
 #include "ExampleB.h"
-#include "hm.h"
+#include "om.h"
 
 using namespace std;
 
@@ -11,12 +11,12 @@ int main() {
 
     try
     {
-        hmp<Example> p (new Example); // user-defined new
+        ObjectPtr<Example> p (new Example); // user-defined new
         p->set_values(3,5);
         std:cout << "example " << std::endl;
-        hmp<Example> other = p;
+        ObjectPtr<Example> other = p;
         other = p;
-        hmp<Example> other2= other;
+        ObjectPtr<Example> other2= other;
         cout << other->area()<< endl;
         kill(other);
         kill(p);

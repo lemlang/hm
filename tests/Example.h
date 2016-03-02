@@ -6,14 +6,17 @@
 #define CPP_HM_EXAMPLE_H
 #include <iostream>
 #include <memory>
+#include "om.h"
 
-
-class Example {
+class Example: public Object<Example> {
     int width, height;
 public:
     int wtf = 11;
     void* set_values (int,int);
+    void* makeChain(ObjectPtr<Example> pointer);
     int area ();
+private:
+    //ObjectPtr<Example> point;
 };
 
 

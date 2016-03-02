@@ -5,6 +5,8 @@
 #ifndef CPP_HM_HM_H
 #define CPP_HM_HM_H
 
+#include <cstdlib>
+
 
 #define MAXMEMSIZE 0x400000L
 
@@ -15,36 +17,36 @@ typedef struct {
 } memblock;
 
 
-class hms {
-    static hms *hms_instance;
+class ObjectManagement {
+    static ObjectManagement *system_instance;
     int* M;
     int next = 0;
-    hms();
+    ObjectManagement();
 public:
-    static hms* instance();
+    static ObjectManagement * instance();
     memblock* allocate();
 };
 
 
-template < typename T > class hmp {
+template < typename T > class ObjectPtr {
 private:
     memblock* intermediate;
     int generation;
 
 public:
-    hmp(T* candidate) {
-        this->intermediate = hms::instance()->allocate();
+    ObjectPtr(T* candidate) {
+        this->intermediate = ObjectManagement::instance()->allocate();
         this->intermediate->pointer = candidate;
         this->intermediate->generation++;
         this->generation = this->intermediate->generation;
         std::cout << "constructor "<< (long)this->intermediate << std::endl;
         std::cout<< std::endl;
     }
-    hmp(const hmp<T>& p) : intermediate(p.intermediate) {
+    ObjectPtr(const ObjectPtr<T>& p) : intermediate(p.intermediate) {
         this->generation = p.generation;
         std::cout << "copy constructor"<< std::endl;
     }
-    ~hmp() {
+    ~ObjectPtr() {
         std::cout << "destructor called on smart pointer"<< std::endl;
     }
     T&  operator*() {
@@ -63,7 +65,7 @@ public:
             throw std::bad_alloc();
         }
     }
-    hmp<T>& operator = (const hmp<T>& p) {
+    ObjectPtr<T>& operator = (const ObjectPtr<T>& p) {
         std::cout << "Assignment operator"<< std::endl;
         if (this != &p) // Avoid self assignment
         {
@@ -80,12 +82,12 @@ public:
         return (T&)this;
     }
 
-    friend void kill(hmp<T> anypointer){
+    friend void kill(ObjectPtr<T> anypointer){
        if( anypointer.intermediate->pointer != NULL && anypointer.intermediate->generation == anypointer.generation) {
             std::cout << "killem! "<< anypointer.intermediate->pointer << std::endl;
             anypointer.intermediate->generation++;
            ((T*)(anypointer.intermediate->pointer))->~T();
-           free(anypointer.intermediate->pointer);
+           std::free(anypointer.intermediate->pointer);
             //delete ((T*)(anypointer.intermediate->pointer));
         } else {
             std::cout << "cannot kill: already dead!" << std::endl;
@@ -93,7 +95,16 @@ public:
     }
 };
 
+template<class T> class Object {
 
+public:
+    Object() : self(NULL) {
+        std::cout << " Object constructor " << std::endl;
+    }
+
+private:
+    ObjectPtr<T> self;
+};
 
 
 

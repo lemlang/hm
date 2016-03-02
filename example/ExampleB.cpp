@@ -4,6 +4,6 @@
 
 #include "ExampleB.h"
 
-void *ExampleB::setPoint(hmp<Example> point) {
+void *ExampleB::setPoint(ObjectPtr<Example> point) {
     this->point = point;
 }

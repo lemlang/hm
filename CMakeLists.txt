@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.4)
-project(cpp_hm)
+project(cpp_om)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-set(SOURCE_FILES main.cpp hm.h hm.cpp Example.h Example.cpp ExampleB.h ExampleB.cpp)
-add_executable(cpp_hm ${SOURCE_FILES})
+enable_testing()
+add_subdirectory(om)
+add_subdirectory(tests)
+add_subdirectory(example)
+
