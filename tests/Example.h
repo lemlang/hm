@@ -8,7 +8,7 @@
 #include <memory>
 #include "om.h"
 
-class Example: public Object<Example> {
+class Example: public Object {
     int width, height;
 public:
     int wtf = 11;
@@ -16,7 +16,7 @@ public:
     void* makeChain(ObjectPtr<Example> pointer);
     int area ();
 private:
-    //ObjectPtr<Example> point;
+    ObjectPtr<Example> point(nullptr_t);
 };
 
 

@@ -6,10 +6,14 @@
 #define CPP_HM_HM_H
 
 #include <cstdlib>
+#include <type_traits>
 
 
 #define MAXMEMSIZE 0x400000L
 
+template<class T > class ObjectPtr;
+//template<class T>
+class Object;
 
 typedef struct {
     void* pointer;
@@ -25,19 +29,27 @@ class ObjectManagement {
 public:
     static ObjectManagement * instance();
     memblock* allocate();
+    void inject(ObjectPtr<Object> source, Object* target);
 };
 
 
-template < typename T > class ObjectPtr {
+template < class   T > class ObjectPtr {
+    friend class ObjectManagement;
+    static_assert(
+            std::is_base_of<Object, T>::value, "T must be derived from Object"
+    );
 private:
     memblock* intermediate;
     int generation;
 
 public:
     ObjectPtr(T* candidate) {
+
         this->intermediate = ObjectManagement::instance()->allocate();
+        Object* preSelf = (Object*)candidate;
         this->intermediate->pointer = candidate;
         this->intermediate->generation++;
+        //this->intermediate->pointer->self = this;
         this->generation = this->intermediate->generation;
         std::cout << "constructor "<< (long)this->intermediate << std::endl;
         std::cout<< std::endl;
@@ -47,7 +59,14 @@ public:
         std::cout << "copy constructor"<< std::endl;
     }
     ~ObjectPtr() {
-        std::cout << "destructor called on smart pointer"<< std::endl;
+        //std::cout << "destructor called on smart pointer"<< std::endl;
+
+        if( this->intermediate->pointer != NULL && this->intermediate->generation == this->generation) {
+            std::cout << "killem! " << this->intermediate->pointer << std::endl;
+            this->intermediate->generation++;
+            ((T *) (this->intermediate->pointer))->~T();
+            std::free(this->intermediate->pointer);
+        }
     }
     T&  operator*() {
         std::cout << "memebr override *"<< std::endl;
@@ -62,6 +81,7 @@ public:
         std::cout << "memeber override -> "<< this->intermediate->pointer<< std::endl;
             return (T*) (this->intermediate->pointer);
         } else {
+            std::cout<<"Null pointer exception"<<std::endl;
             throw std::bad_alloc();
         }
     }
@@ -95,15 +115,16 @@ public:
     }
 };
 
-template<class T> class Object {
-
+//template<class  P>
+class Object {
+    friend class ObjectManagement;
 public:
     Object() : self(NULL) {
         std::cout << " Object constructor " << std::endl;
     }
 
 private:
-    ObjectPtr<T> self;
+    ObjectPtr<Object> self;
 };
 
 

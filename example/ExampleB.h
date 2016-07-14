@@ -8,7 +8,7 @@
 #include "Example.h"
 #include "om.h"
 
-class ExampleB: public Object<ExampleB> {
+class ExampleB: public Object {
     ObjectPtr<Example> point;
 public:
     void* setPoint(ObjectPtr<Example> point);

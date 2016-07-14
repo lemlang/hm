@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.3)
 project(example)
 
 include_directories(${OM_INCLUDE_DIRS})

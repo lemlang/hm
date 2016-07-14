@@ -8,7 +8,7 @@
 #include <memory>
 #include "om.h"
 
-class Example {
+class Example: public Object  {
     int width, height;
 public:
     int wtf = 11;

@@ -11,11 +11,16 @@ int main() {
     try
     {
         ObjectPtr<Example> p (new Example); // user-defined new
-        ObjectPtr<Example> other = p;
-        cout << other->area()<< endl;
-        kill(other);
+        cout << p->area()<< endl;
         kill(p);
         cout << p->area()<< endl;
+        //ObjectPtr<Example> other = p;
+        //ObjectPtr<Example> other2 (new Example);
+        //other->makeChain(other2);
+        //cout << other->area()<< endl;
+        //kill(other);
+        //kill(other2);
+        //kill(p);
 
     }
     catch (std::bad_alloc & x)

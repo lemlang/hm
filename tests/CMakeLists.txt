@@ -1,4 +1,5 @@
 enable_testing()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 include_directories(${OM_INCLUDE_DIRS})
 set(TESTS test_hanging_reference.cpp Example.h Example.cpp)

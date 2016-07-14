@@ -17,10 +17,11 @@ int main() {
         ObjectPtr<Example> other = p;
         other = p;
         ObjectPtr<Example> other2= other;
-        cout << other->area()<< endl;
+        cout <<"area "<< other->area()<< endl;
         kill(other);
+        kill(other2);
         kill(p);
-        cout << p->area()<< endl;
+        cout <<"area "<< p->area()<< endl;
         //hmp<ExampleB> pointb (new ExampleB(p));
 
     }

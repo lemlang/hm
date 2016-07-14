@@ -32,7 +32,7 @@ memblock*ObjectManagement::allocate() {
 void * operator new(std::size_t n) throw(std::bad_alloc)
 {
     std::cout << "new " << n << std::endl;
-    return malloc(n+sizeof(ObjectPtr<ObjectManagement>));
+    return malloc(n);
 }
 void operator delete(void * p, std::size_t sz ) throw()
 {
@@ -43,4 +43,8 @@ void operator delete(void * p) throw()
 {
     std::cout << "delete " << typeid(p).name() << " " << p << std::endl;
     free(p);
+}
+
+void ObjectManagement::inject(ObjectPtr<Object> source, Object* target) {
+    target->self  = source;
 }
